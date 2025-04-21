@@ -4,9 +4,6 @@ import re
 import numpy as np
 import random
 from tqdm import tqdm
-
-import re
-import json
 def parse_to_json(input_string):
     # 用于匹配对象及其框的正则表达式
     object_pattern = re.compile(r'<\|object_ref_start\|>(.*?)<\|object_ref_end\|>')

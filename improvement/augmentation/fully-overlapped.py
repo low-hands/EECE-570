@@ -4,24 +4,6 @@ import re
 import numpy as np
 import random
 from tqdm import tqdm
-
-
-'''
-  {
-    "id": "identity_0",
-    "conversations": [
-      {
-        "from": "user",
-        "value": "Picture 1: <img>/mnt/workspace/luominghua.lmh/dataset/aesthetic_qwen_vl_data_prepare/face_image_dont_open/2a8158fe882cfdd50d901ab613125d81.png</img>\n仔细检查图像，框出图中的所有真实活人脸，请避免框出雕塑、人偶、画像、海报等非真实人脸。"
-      },
-      {
-        "from": "assistant",
-        "value": "<ref>真实人脸</ref><box>(50,459),(68,494)</box>",
-  }
-'''
-
-import re
-import json
 def parse_to_json(input_string):
     # 用于匹配对象及其框的正则表达式
     object_pattern = re.compile(r'<\|object_ref_start\|>(.*?)<\|object_ref_end\|>')
