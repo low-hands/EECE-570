@@ -202,7 +202,7 @@ This focuses on enhancing the model’s understanding of **where** objects are a
 ```bash
 bash examples/exports/merge_lora.sh
 ```
-
+📌 Remember to input your weight in the bash script!
 ### Inference Format
 
 Raw output:
