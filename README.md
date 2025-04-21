@@ -1,31 +1,46 @@
-# 🧠 Instruction-based Object Detection using Multimodal Foundation Models
+# Instruction-based Object Detection using Multimodal Foundation Models
 
-This is the repo for my EECE-570 project , demonstrating how to fine-tune the **Qwen2-VL-2B-Instruct** model for object detection.
-
----
-
-## 📦 Overview
-
-- 🔧 Base Model: Qwen2-VL-2B-Instruct
-- 🔁 Fine-tuning: LoRA and Instruction Tuning
-- 📊 Evaluation: Precision@50, Recall@50, F1-score, Mean IoU@50
-- 💡 Contribution: Instruction-level augmentations to improve spatial and quantitative reasoning
+This is the repo for my EECE-570 project, demonstrating how to fine-tune the **Qwen2-VL-2B-Instruct** model for object detection.
 
 ---
 
+## Overview
 
-## 📦 Demo
+- Base Model: Qwen2-VL-2B-Instruct
+- Fine-tuning: LoRA and Instruction Tuning
+- Evaluation: Precision@50, Recall@50, F1-score, Mean IoU@50
+- Contribution: Instruction-level augmentations to improve spatial and quantitative reasoning
+---
+
+## Environment
+
+```bash
+OS: Windows 11 Pro  
+GPU: NVIDIA GeForce RTX 4070 (12GB VRAM)  
+CPU: Intel Core i7-13700  
+RAM: 32GB DDR5  
+Python: 3.10.16  
+PyTorch: 2.1.0 + CUDA 12.8  
+Transformers: 4.49.0  
+LoRA Framework: Swift SFT (ms-swift 3.3.0.dev0)  
+Other Packages: qwen-vl-utils==0.0.10, opencv-python, tqdm, json
+```
+
+All experiments were conducted on a single machine using consumer-grade hardware.
+
+---
+
+## Demo
 https://www.youtube.com/watch?v=Xa2Ky-XgKpo
 
-
 ---
-## 🧱 Step 1: Data Preparation
+## Step 1: Data Preparation
 
-### 📂 Data Preprocessing
+### Data Preprocessing
 
 The data preprocessing pipeline includes three main steps. All scripts are located in the [`/data_preprocess`](./data_preprocess) directory.
 
-#### 👣 Steps Overview:
+#### Steps Overview:
 
 Step1.py: **Subset COCO Images and Annotations**  
    - **Input**: `instances_train2017.json` + the `train2017/` image folder  
@@ -60,11 +75,11 @@ Step3.py: **Construct Instruction-Following Multimodal Format**
 
 ---
 
-## ⚙️ Step 2: Model Training
+## Step 2: Model Training
 
 I use the `swift` training CLI with LoRA.
 
-### 🚀 Training Config (stored in `run.bash`)
+### Training Config (stored in `run.bash`)
 
 ```bash
 #!/bin/bash
@@ -96,12 +111,12 @@ CUDA_VISIBLE_DEVICES=0 swift sft \
   --add_version
 ```
 
-### 🔧 Explanation
+### Explanation
 
 - **LoRA Parameters:** I tried different settings to allow expressive adapter layers in the experiments.
 - **Freezing:** All components (`ViT`, `Aligner`, and LLM) are unfrozen. I set Vit and Aligner frozen or unfrozen in my experiments.
 
-### 📂 How to Run
+### How to Run
 
 To start training, run the following:
 
@@ -111,33 +126,29 @@ bash run.sh
 
 ---
 
-## 🧠 Step 3: Instruction-Level Augmentation
+## Step 3: Instruction-Level Augmentation
 
 To improve the model’s perception ability, I designed two main types of instruction-level augmentations: **quantity-oriented** and **spatial-oriented**.  
 All augmentation scripts are located in `/improvement/augmentation/`, and the generated training samples are stored in `/improvement/samples/`.
 
----
-
-### 🔢 Quantity-Oriented Augmentation
+### 🔢 Quantity-based Augmentation
 
 This focuses on helping the model better understand **how many objects** of each category exist in the image.
 
-- 📌 **Prompt:**
+- **Prompt:**
   ```
   <image> Please count how many objects of each category are in the image.
   ```
 
-- ✅ **Response:**
+- **Response:**
   ```
   person: 2
   bicycle: 1
   motorcycle: 1
   ```
 
-- 🧾 Code: `/improvement/augmentation/count.py`  
-- 📂 Output: `/improvement/samples/count.json`
-
-This type strengthens the model’s **global awareness** and **object counting** ability.
+- Code: `/improvement/augmentation/generate_count.py`  
+- Output: `/improvement/samples/count.json`
 
 ---
 
@@ -145,147 +156,62 @@ This type strengthens the model’s **global awareness** and **object counting**
 
 This focuses on enhancing the model’s understanding of **where** objects are and how they are framed in the image. It includes three sub-types:
 
-#### 1. ✅ Fully Enclosed Region
+#### 1. Fully Enclosed Region
 - **Goal:** Simulate ideal bounding box cases where an object is completely enclosed.
 
-- 📌 **Prompt:**
+- **Prompt:**
   ```
   Please check the area <|box_start|>(x1,y1),(x2,y2)<|box_end|> and describe if it fully contains any object from the COCO categories.
   ```
 
-- ✅ **Response:**
+- **Response:**
   ```
   The area <|box_start|>(x1,y1),(x2,y2)<|box_end|> fully contains a "bicycle".
   ```
+- Code: `/improvement/augmentation/generate_full.py`  
+- Output: `/improvement/samples/fully-overlapped.json`
 
-- 🧾 Code: `/improvement/augmentation/fully-overlapped.py`  
-- 📂 Output: `/improvement/samples/fully-overlapped.json`
-
-#### 2. 🟡 Partially Overlapped Region
+#### 2. Partially Overlapped Region
 - **Goal:** Simulate cases where objects are occluded or cropped.
 
-- 📌 **Prompt:**
+- **Prompt:**
   ```
   Please check the area <|box_start|>(x1,y1),(x2,y2)<|box_end|> and describe the category and degree of inclusion.
   ```
 
-- ✅ **Response:**
+- **Response:**
   ```
   The area <|box_start|>(x1,y1),(x2,y2)<|box_end|> partially contains a "person", about 60% is visible.
   ```
+- Code: `/improvement/augmentation/generate_partial.py`  
+- Output: `/improvement/samples/partial-overlapped.json`
 
-- 🧾 Code: `/improvement/augmentation/partial-overlapped.py`  
-- 📂 Output: `/improvement/samples/partial-overlapped.json`
-
-#### 3. ❌ Non-Overlapping Region
+#### 3. Non-Overlapping Region
 - **Goal:** Simulate empty or irrelevant regions as negative samples.
 
-- 📌 **Prompt:**
+- **Prompt:**
   ```
   Please check the area <|box_start|>(x1,y1),(x2,y2)<|box_end|> and determine if any object is present.
   ```
 
-- ✅ **Response:**
+- **Response:**
   ```
   The area <|box_start|>(x1,y1),(x2,y2)<|box_end|> does not contain any object from the COCO categories.
   ```
-
-- 🧾 Code: `/improvement/augmentation/non-overlappin.py`  
-- 📂 Output: `/improvement/samples/non-overlapping.json`
-
----
-
-## 🧠 Step 3: Instruction-Level Augmentation
-
-To improve the model’s perception ability, I designed two main types of instruction-level augmentations: **quantity-oriented** and **spatial-oriented**.  
-All augmentation scripts are located in `/improvement/augmentation/`, and the generated training samples are stored in `/improvement/samples/`.
+- Code: `/improvement/augmentation/generate_none.py`  
+- Output: `/improvement/samples/non-overlapping.json`
 
 ---
 
-### 🔢 Quantity-Oriented Augmentation
+## Step 4: Inference
 
-This focuses on helping the model better understand **how many objects** of each category exist in the image.
-
-- 📌 **Prompt:**
-  ```
-  <image> Please count how many objects of each category are in the image.
-  ```
-
-- ✅ **Response:**
-  ```
-  person: 2
-  bicycle: 1
-  motorcycle: 1
-  ```
-
-- 🧾 Code: `/improvement/augmentation/generate_count.py`  
-- 📂 Output: `/improvement/samples/count.json`
-
----
-
-### 📐 Spatial-Oriented Augmentation
-
-This focuses on enhancing the model’s understanding of **where** objects are and how they are framed in the image. It includes three sub-types:
-
-#### 1. ✅ Fully Enclosed Region
-- **Goal:** Simulate ideal bounding box cases where an object is completely enclosed.
-
-- 📌 **Prompt:**
-  ```
-  Please check the area <|box_start|>(x1,y1),(x2,y2)<|box_end|> and describe if it fully contains any object from the COCO categories.
-  ```
-
-- ✅ **Response:**
-  ```
-  The area <|box_start|>(x1,y1),(x2,y2)<|box_end|> fully contains a "bicycle".
-  ```
-
-- 🧾 Code: `/improvement/augmentation/generate_full.py`  
-- 📂 Output: `/improvement/samples/fully-overlapped.json`
-
-#### 2. 🟡 Partially Overlapped Region
-- **Goal:** Simulate cases where objects are occluded or cropped.
-
-- 📌 **Prompt:**
-  ```
-  Please check the area <|box_start|>(x1,y1),(x2,y2)<|box_end|> and describe the category and degree of inclusion.
-  ```
-
-- ✅ **Response:**
-  ```
-  The area <|box_start|>(x1,y1),(x2,y2)<|box_end|> partially contains a "person", about 60% is visible.
-  ```
-
-- 🧾 Code: `/improvement/augmentation/generate_partial.py`  
-- 📂 Output: `/improvement/samples/partial-overlapped.json`
-
-#### 3. ❌ Non-Overlapping Region
-- **Goal:** Simulate empty or irrelevant regions as negative samples.
-
-- 📌 **Prompt:**
-  ```
-  Please check the area <|box_start|>(x1,y1),(x2,y2)<|box_end|> and determine if any object is present.
-  ```
-
-- ✅ **Response:**
-  ```
-  The area <|box_start|>(x1,y1),(x2,y2)<|box_end|> does not contain any object from the COCO categories.
-  ```
-
-- 🧾 Code: `/improvement/augmentation/generate_none.py`  
-- 📂 Output: `/improvement/samples/non-overlapping.json`
-
----
-
-## 🔍 Step 4: Inference
-
-### 🧠 Model Merge
+### Model Merge
 
 ```bash
 bash examples/exports/merge_lora.sh
 ```
 
-### 🔎 Inference Format
+### Inference Format
 
 Raw output:
 ```
@@ -299,35 +225,23 @@ Parsed output:
 }
 ```
 
-- 🧾 Inference Code: `/improvement/inference.py`
+- Inference Code: `/improvement/inference.py`
 
-### 📊 Evaluation Metrics
+### Evaluation Metrics
 
 - Precision@50
 - Recall@50
 - F1-score@50
 - Mean IoU@50
   
-✅ Evaluated using IoU ≥ 0.5 and class match.
+Evaluated using IoU ≥ 0.5 and class match.
 
-- 🧾 Evaluation Code: `/improvement/evaluation.py`
+- Evaluation Code: `/improvement/evaluation.py`
 
-### 🖼️ Visualization Example
-
+### Visualization Example
+![Instruction Sample](./out1.jpg)
+- Visualization Code: `/improvement/visualization_for_infer.py`
 ---
+## Conclusion
 
-## 📌 Observations
-
-Even under a 10-epoch cap, perceptual instruction augmentation led to measurable improvements in detection quality.  
-Further improvements are expected with:
-
-- More training epochs
-- Larger datasets
-- Refined prompt engineering
-
----
-
-## 📎 License
-
-MIT  
-For research and academic use.
+This project presents a practical attempt at adapting a large multimodal model (Qwen2VL-2B) for structured object detection via instruction tuning. Although the training dataset was relatively small and the computation was limited to a single GPU, the model still achieved measurable improvements through LoRA fine-tuning and instruction-level augmentations. This indicates that with carefully designed prompts and lightweight adaptation methods, even resource-constrained setups can benefit from large vision-language models.
