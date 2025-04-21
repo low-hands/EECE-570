@@ -6,8 +6,8 @@ This is the repo for my EECE-570 project, demonstrating how to fine-tune the **Q
 
 ## Overview
 
-- Base Model: Qwen2-VL-2B-Instruct
-- Fine-tuning: LoRA and Instruction Tuning
+- Base Model: Qwen2-VL-2B-Instruct (https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct)
+- Fine-tuning: Swift Architecture with LoRA and Instruction Tuning (https://github.com/modelscope/ms-swift)
 - Evaluation: Precision@50, Recall@50, F1-score, Mean IoU@50
 - Contribution: Instruction-level augmentations to improve spatial and quantitative reasoning
 ---
@@ -35,6 +35,8 @@ https://www.youtube.com/watch?v=Xa2Ky-XgKpo
 
 ---
 ## Step 1: Data Preparation
+
+Data are downloaded from https://cocodataset.org/#download
 
 ### Data Preprocessing
 
