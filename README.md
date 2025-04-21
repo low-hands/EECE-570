@@ -131,7 +131,7 @@ bash run.sh
 ## Step 3: Instruction-Level Augmentation
 
 To improve the model’s perception ability, I designed two main types of instruction-level augmentations: **quantity-oriented** and **spatial-oriented**.  
-All augmentation scripts are located in `/improvement/augmentation/`, and the generated training samples are stored in [`/improvement/samples/`](`/improvement/samples/`).
+All augmentation scripts are located in `/improvement/augmentation/`, and the generated training samples are stored in [`./improvement/samples/`](`./improvement/samples/`).
 
 ### 🔢 Quantity-based Augmentation
 
@@ -149,8 +149,8 @@ This focuses on helping the model better understand **how many objects** of each
   motorcycle: 1
   ```
 
-- Code: [`/improvement/augmentation/count.py`](`/improvement/augmentation/count.py`)  
-- Output: [`/improvement/samples/count.json`]{`/improvement/samples/count.json`)
+- Code: [`./improvement/augmentation/count.py`](`./improvement/augmentation/count.py`)  
+- Output: [`./improvement/samples/count.json`]{`./improvement/samples/count.json`)
 
 ---
 
@@ -170,8 +170,8 @@ This focuses on enhancing the model’s understanding of **where** objects are a
   ```
   The area <|box_start|>(x1,y1),(x2,y2)<|box_end|> fully contains a "bicycle".
   ```
-- Code: [`/improvement/augmentation/fully-overlapped.py`](`/improvement/augmentation/fully-overlapped.py`)  
-- Output: [`/improvement/samples/fully-overlapped.json`]{`/improvement/samples/fully-overlapped.json`)
+- Code: [`./improvement/augmentation/fully-overlapped.py`](`./improvement/augmentation/fully-overlapped.py`)  
+- Output: [`./improvement/samples/fully-overlapped.json`]{`./improvement/samples/fully-overlapped.json`)
 
 #### 2. Partially Overlapped Region
 - **Goal:** Simulate cases where objects are occluded or cropped.
@@ -185,8 +185,8 @@ This focuses on enhancing the model’s understanding of **where** objects are a
   ```
   The area <|box_start|>(x1,y1),(x2,y2)<|box_end|> partially contains a "person", about 60% is visible.
   ```
-- Code: [`/improvement/augmentation/partial-overlapped.py`](`/improvement/augmentation/partial-overlapped.py`)  
-- Output: [`/improvement/samples/partial-overlapped.json`]{`/improvement/samples/partial-overlapped.json`)
+- Code: [`./improvement/augmentation/partial-overlapped.py`](`./improvement/augmentation/partial-overlapped.py`)  
+- Output: [`./improvement/samples/partial-overlapped.json`]{`./improvement/samples/partial-overlapped.json`)
 
 #### 3. Non-Overlapping Region
 - **Goal:** Simulate empty or irrelevant regions as negative samples.
@@ -200,8 +200,8 @@ This focuses on enhancing the model’s understanding of **where** objects are a
   ```
   The area <|box_start|>(x1,y1),(x2,y2)<|box_end|> does not contain any object from the COCO categories.
   ```
-- Code: [`/improvement/augmentation/non-overlapping.py`](`/improvement/augmentation/non-overlapping.py`)  
-- Output: [`/improvement/samples/non-overlapping.json`]{`/improvement/samples/non-overlapping.json`)
+- Code: [`./improvement/augmentation/non-overlapping.py`](`./improvement/augmentation/non-overlapping.py`)  
+- Output: [`./improvement/samples/non-overlapping.json`]{`./improvement/samples/non-overlapping.json`)
 
 ---
 
@@ -227,7 +227,7 @@ Parsed output:
 }
 ```
 
-- Inference Code: [`/improvement/inference.py`](`/improvement/inference.py`)
+- Inference Code: [`./improvement/inference.py`](`./improvement/inference.py`)
 
 ### Evaluation Metrics
 
@@ -238,11 +238,11 @@ Parsed output:
   
 Evaluated using IoU ≥ 0.5 and class match.
 
-- Evaluation Code: [`/improvement/evaluation.py`](`/improvement/evaluation.py`)
+- Evaluation Code: [`./improvement/evaluation.py`](`./improvement/evaluation.py`)
 
 ### Visualization Example
 ![Instruction Sample](./out1.jpg)
-- Visualization Code: `[/improvement/visualization_for_infer.py`](`/improvement/visualization_for_infer.py`)
+- Visualization Code: [`./improvement/visualization_for_infer.py`](`./improvement/visualization_for_infer.py`)
 ---
 ## Conclusion
 
