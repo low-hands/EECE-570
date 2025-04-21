@@ -50,17 +50,7 @@ Step1.py: **Subset COCO Images and Annotations**
 
 Step2.py: **Convert to Detection Format**  
    - **Input**: Subset annotations  
-   - **Output**: A JSON file with image paths and per-class bounding boxes:
-     ```json
-     {
-       "image_path": "xxx.jpg",
-       "object": {
-         "person": [[x1, y1, x2, y2]],
-         "car": [[x1, y1, x2, y2]]
-       }
-     }
-     ```
-
+   - **Output**: A JSON file with image paths and per-category bounding boxes
 Step3.py: **Construct Instruction-Following Multimodal Format**  
    - **Input**: The above JSON with object annotations  
    - **Output**: A multimodal instruction-style dataset for fine-tuning:
