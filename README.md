@@ -140,7 +140,7 @@ This focuses on helping the model better understand **how many objects** of each
   ```
 
 - Code: [`./improvement/augmentation/count.py`](./improvement/augmentation/count.py)  
-- Output: [`./improvement/samples/count.json`]{./improvement/samples/count.json)
+- Output: [`./improvement/samples/count.json`](./improvement/samples/count.json)
 
 ---
 
@@ -161,7 +161,7 @@ This focuses on enhancing the model’s understanding of **where** objects are a
   The area <|box_start|>(x1,y1),(x2,y2)<|box_end|> fully contains a "bicycle".
   ```
 - Code: [`./improvement/augmentation/fully-overlapped.py`](./improvement/augmentation/fully-overlapped.py)  
-- Output: [`./improvement/samples/fully-overlapped.json`]{./improvement/samples/fully-overlapped.json)
+- Output: [`./improvement/samples/fully-overlapped.json`](./improvement/samples/fully-overlapped.json)
 
 #### 2. Partially Overlapped Region
 - **Goal:** Simulate cases where objects are occluded or cropped.
@@ -176,7 +176,7 @@ This focuses on enhancing the model’s understanding of **where** objects are a
   The area <|box_start|>(x1,y1),(x2,y2)<|box_end|> partially contains a "person", about 60% is visible.
   ```
 - Code: [`./improvement/augmentation/partial-overlapped.py`](./improvement/augmentation/partial-overlapped.py)  
-- Output: [`./improvement/samples/partial-overlapped.json`]{./improvement/samples/partial-overlapped.json)
+- Output: [`./improvement/samples/partial-overlapped.json`](./improvement/samples/partial-overlapped.json)
 
 #### 3. Non-Overlapping Region
 - **Goal:** Simulate empty or irrelevant regions as negative samples.
@@ -191,7 +191,7 @@ This focuses on enhancing the model’s understanding of **where** objects are a
   The area <|box_start|>(x1,y1),(x2,y2)<|box_end|> does not contain any object from the COCO categories.
   ```
 - Code: [`./improvement/augmentation/non-overlapping.py`](./improvement/augmentation/non-overlapping.py)  
-- Output: [`./improvement/samples/non-overlapping.json`]{./improvement/samples/non-overlapping.json)
+- Output: [`./improvement/samples/non-overlapping.json`](./improvement/samples/non-overlapping.json)
 
 ---
 
