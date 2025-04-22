@@ -44,14 +44,14 @@ The data preprocessing pipeline includes three main steps. All scripts are locat
 
 #### Steps Overview:
 
-Step1.py: **Subset COCO Images and Annotations**  
+Step_1.py: **Subset COCO Images and Annotations**  
    - **Input**: `instances_train2017.json` + the `train2017/` image folder  
    - **Output**: A smaller COCO subset for faster training and experimentation.
 
-Step2.py: **Convert to Detection Format**  
+Step_2.py: **Convert to Detection Format**  
    - **Input**: Subset annotations  
    - **Output**: A JSON file with image paths and per-category bounding boxes
-Step3.py: **Construct Instruction-Following Multimodal Format**  
+Step_3.py: **Construct Instruction-Following Multimodal Format**  
    - **Input**: The above JSON with object annotations  
    - **Output**: A multimodal instruction-style dataset for fine-tuning:
      ```json
